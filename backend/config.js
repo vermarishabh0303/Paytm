@@ -1,2 +1,2 @@
-cost JWT_SECRET = 'vermasecret';
+const JWT_SECRET = 'vermasecret';
 module.exports = JWT_SECRET
