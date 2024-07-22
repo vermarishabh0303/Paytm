@@ -12,7 +12,7 @@ const signinBody = zod.object({
 })
 
 router.post("/signin", async(res, rej)=>{
-    const {success} = signupSchema.safeParse(req.body);
+    const {success} = signinBody.safeParse(req.body);
 
     if(!success){
         return res.status(411).json({
@@ -42,28 +42,27 @@ router.post("/signin", async(res, rej)=>{
 })
 
 
-const signupSchema = zod.object({
+const signupBody = zod.object({
     username: zod.string().email(),
-    password: zod.string(),
-    firstName: zod.string(),
-    lastName: zod.string(),
+	firstName: zod.string(),
+	lastName: zod.string(),
+	password: zod.string()
 })
-router.post("/signup", async(res, rej)=>{
-    const body = req.body;
-    const {success} = signupSchema.safeParse(req.body);
-
+router.post("/signup", async(req, res)=>{
+    const { success } = signupBody.safeParse(req.body)
+    console.log(success)
     if(!success){
-        return res.json({
-            message: "Email already taken/ Incorrect inputs"
+        return res.status(411).json({
+            message: "Incorrect inputs"
         })
     }
     const existingUser = await User.findOne({
-        username: body.username
+        username: req.body.username
     })
 
     if(existingUser){
-        return res.json({
-            message: "Email already taken/ Incorrect inputs"
+        return res.status(411).json({
+            message: "Email already taken"
         })
     }
 
