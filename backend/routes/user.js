@@ -3,7 +3,7 @@ const zod = require("zod");
 const {JWT_SECRET} = require("../config");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const {User} = require("../db");
+const {User, Account} = require("../db");
 const { authMiddleware } = require("../middleware");
 
 const signinBody = zod.object({
@@ -73,6 +73,12 @@ router.post("/signup", async(req, res)=>{
         lastName: req.body.lastName,
     });
     const userId = user._id;
+
+    await Account.create({
+        userId,
+        balance: 1 + Math.random() * 10000
+    })
+
     const token = jwt.sign({
         userId
     },JWT_SECRET) ;
